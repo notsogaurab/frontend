@@ -1,0 +1,38 @@
+name: Build and Deploy frontend to S3
+
+on:
+  push:
+    branches:
+        - main
+
+jobs:
+  build:
+    name: Build dist files and deploy to S3
+    runs-on: self-hosted
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+      - name: Install Dependencies
+        run: |
+          npm install
+          npm run build
+      - name: Increase version of package.json
+        run: |
+          git config --global user.name 'notsogaurab'
+          git config --global user.email 'gauravupreti1230@gmail.com'
+          npm version patch --no-git-tag-version
+          git add package.json
+          git commit -m "Increase version of package.json "
+          git push https://${{ secrets.GH_TOKEN }}@github.com/notsogaurab/frontend.git
+
+      - name: Upload dist files to S3
+        run: |
+          aws s3 cp ./dist/ s3://gaurab-action-bucket/ --recursive
+
+      - name: Invalidate CloudFront Cache
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{ secrets.DISTRIBUTION_ID }} --paths "/*"
