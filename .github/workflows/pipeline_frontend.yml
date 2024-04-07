@@ -1,0 +1,31 @@
+name: Frontend Build and pushing to S3
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Dist File and Increase package.json and Copy to S3
+    runs-on: ubuntu-latest
+    steps:
+      - name: Github Checkout
+        uses: actions/checkout@v2
+      - name: Node version setup
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install dependencies and build
+        run: |
+          npm install
+          npm run build
+
+      - name: Push dist to S3 bucket
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: "us-east-1"
+        run: |
+          aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+          aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+          aws configure set default.region $AWS_DEFAULT_REGION
+          aws s3 cp ./dist/ s3://gaurab-s3-bucket --recursive
