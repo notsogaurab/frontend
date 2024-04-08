@@ -23,6 +23,7 @@ jobs:
         run: |
             yarn build
             sudo cp -r /home/runner/work/frontend/frontend/dist/* /var/www/html/
+            ls /var/www/html/
             sudo systemctl restart nginx
 
       - name: Deploy to EC2
