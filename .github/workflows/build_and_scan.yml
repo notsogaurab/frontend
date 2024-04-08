@@ -53,7 +53,7 @@ jobs:
 
       - name: Snyk code test and monitoring
         run: |
-          snyk test $PROJECT_DIR
-          snyk monitor $PROJECT_DIR
+          snyk test ${{ env.PROJECT_DIR }}
+          snyk monitor ${{ env.PROJECT_DIR }}
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
