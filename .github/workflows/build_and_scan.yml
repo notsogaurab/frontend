@@ -22,9 +22,8 @@ jobs:
       - name: Build
         run: |
             yarn build
-            ls -l dist
-            pwd
             ls -l
+            pwd
 
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.0.3
@@ -33,8 +32,9 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
+            ls -al /home/runner/work/frontend/frontend/dist/
             # rsync -avz --delete /home/runner/work/frontend/frontend/dist/* /var/www/html/
-            cp -r /home/runner/work/frontend/frontend/dist/* /var/www/html/
+            sudo cp -r /home/runner/work/frontend/frontend/dist/* /var/www/html/
             sudo systemctl restart nginx
 
   build-and-test-application:
