@@ -24,7 +24,7 @@ jobs:
             yarn build
             ls -l
             pwd
-            cp -r dist/* /home/dist
+            cp -r dist/* /home/ubuntu/dist/
 
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.0.3
