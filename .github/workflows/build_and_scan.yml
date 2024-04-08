@@ -52,7 +52,7 @@ jobs:
         working-directory: ${{ env.PROJECT_DIR }}
 
       - name: Install Snyk CLI
-        run: npm install -g snyk
+        run: yarn global add snyk
 
       - name: Snyk code test
         run: |
