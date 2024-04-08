@@ -22,6 +22,9 @@ jobs:
       - name: Build
         run: yarn build
 
+      - name: List directory contents
+        run: ls -la
+
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.0.3
         with:
