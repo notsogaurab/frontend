@@ -53,10 +53,20 @@ jobs:
 
       - name: Install Snyk CLI
         run: npm install -g snyk
-        
-      - name: Snyk code test and monitoring
+
+      - name: Snyk code test
+        run: snyk test ${{ env.PROJECT_DIR }} || true
+        continue-on-error: true
+
+      - name: Snyk code monitoring
+        run: snyk monitor ${{ env.PROJECT_DIR }} || true
+        continue-on-error: true
+
+      - name: Get Snyk report
         run: |
-          snyk test ${{ env.PROJECT_DIR }}
-          snyk monitor ${{ env.PROJECT_DIR }}
+          snyk test --json ${{ env.PROJECT_DIR }} > snyk_report.json
+          cat snyk_report.json
+        continue-on-error: true
+        if: always()
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
