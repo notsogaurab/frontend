@@ -28,33 +28,32 @@ jobs:
           script: |
             whoami
             ls -al
-        #   script: |
-        #     cd /home/ubuntu/frontend
-        #     git pull
-        #     # Assuming the built files are in the 'build' directory
-        #     rsync -avz --delete ./dist/ /var/www/html/
-        #     sudo systemctl restart nginx
+            cd /home/ubuntu/frontend
+            git pull
+            # Assuming the built files are in the 'build' directory
+            rsync -avz --delete ./dist/ /var/www/html/
+            sudo systemctl restart nginx
 
-#   build-and-test-application:
-#     runs-on: ubuntu-latest
+  build-and-test-application:
+    runs-on: ubuntu-latest
 
-#     env:
-#         PROJECT_DIR: "frontend"
+    env:
+        PROJECT_DIR: "frontend"
 
-#     steps:
-#       - name: Checkout
-#         uses: actions/checkout@v3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
 
-#       - name: npm install, build, and test
-#         run: |
-#           yarn install
-#           yarn build
-#           yarn test
-#         working-directory: ${{ env.PROJECT_DIR }}
+      - name: npm install, build, and test
+        run: |
+          yarn install
+          yarn build
+          yarn test
+        working-directory: ${{ env.PROJECT_DIR }}
 
-#       - name: Snyk code test and monitoring
-#         run: |
-#           snyk test $PROJECT_DIR
-#           snyk monitor $PROJECT_DIR
-#         env:
-#           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      - name: Snyk code test and monitoring
+        run: |
+          snyk test $PROJECT_DIR
+          snyk monitor $PROJECT_DIR
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
