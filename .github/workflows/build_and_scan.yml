@@ -29,17 +29,17 @@ jobs:
           script: |
             whoami
             ls -al
-            cd /home/ubuntu/frontend
+            cd /home/ubuntu/frontend/dist
             git pull
             # Assuming the built files are in the 'build' directory
-            rsync -avz --delete ./dist/ /var/www/html/
+            rsync -avz --delete ./* /var/www/html/
             sudo systemctl restart nginx
 
   build-and-test-application:
     runs-on: ubuntu-latest
 
     env:
-        PROJECT_DIR: "frontend"
+        PROJECT_DIR: '/home/runner/work/frontend/frontend'
 
     steps:
       - name: Checkout
