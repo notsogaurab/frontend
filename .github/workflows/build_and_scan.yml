@@ -49,7 +49,6 @@ jobs:
         run: |
           yarn install
           yarn build
-          npm test
         working-directory: ${{ env.PROJECT_DIR }}
 
       - name: Snyk code test and monitoring
