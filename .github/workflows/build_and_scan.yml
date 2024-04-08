@@ -22,6 +22,7 @@ jobs:
       - name: Build
         run: |
             yarn build
+            mkdir /home/ubuntu/dist
             ls -l
             pwd
             cp -r dist/* /home/ubuntu/dist/
