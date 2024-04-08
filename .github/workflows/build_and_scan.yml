@@ -9,6 +9,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+        PROJECT_DIR: '/home/runner/work/frontend/frontend'
 
     steps:
       - name: Checkout code
@@ -27,12 +29,7 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
-            whoami
-            ls -al
-            cd /home/ubuntu/frontend/dist
-            git pull
-            # Assuming the built files are in the 'build' directory
-            rsync -avz --delete ./* /var/www/html/
+            rsync -avz --delete ${{ env.PROJECT_DIR }}/dist/ /var/www/html/
             sudo systemctl restart nginx
 
   build-and-test-application:
@@ -45,7 +42,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: npm install, build, and test
+      - name: Install dependencies
         run: |
           yarn install
           yarn build
