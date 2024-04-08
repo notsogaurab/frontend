@@ -51,6 +51,9 @@ jobs:
           yarn build
         working-directory: ${{ env.PROJECT_DIR }}
 
+      - name: Install Snyk CLI
+        run: npm install -g snyk
+        
       - name: Snyk code test and monitoring
         run: |
           snyk test ${{ env.PROJECT_DIR }}
