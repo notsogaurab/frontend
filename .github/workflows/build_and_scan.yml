@@ -9,8 +9,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-        PROJECT_DIR: '/home/runner/work/frontend/frontend'
+    # env:
+    #   PROJECT_DIR: '/home/runner/work/frontend/frontend'
 
     steps:
       - name: Checkout code
@@ -20,11 +20,7 @@ jobs:
         run: yarn
 
       - name: Build
-        run: |
-            yarn build
-            sudo cp -r /home/runner/work/frontend/frontend/dist/* /var/www/html/
-            ls /var/www/html/
-            sudo systemctl restart nginx
+        run: yarn build
 
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.0.3
@@ -33,11 +29,10 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
-            ls
-            pwd
-            # rsync -avz --delete /home/runner/work/frontend/frontend/dist/ /var/www/html/
-            sudo cp -r /home/runner/work/frontend/frontend/dist/. /var/www/html/
-            sudo systemctl restart nginx
+            sudo rm -rf /var/www/html/*  # Remove existing files
+            sudo cp -r dist/* /var/www/html/  # Copy new build to Nginx document root
+            sudo systemctl restart nginx  # Restart Nginx to apply changes
+
 
   build-and-test-application:
     runs-on: ubuntu-latest
