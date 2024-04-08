@@ -55,11 +55,15 @@ jobs:
         run: npm install -g snyk
 
       - name: Snyk code test
-        run: snyk test ${{ env.PROJECT_DIR }} || true
+        run: |
+            snyk test ${{ env.PROJECT_DIR }} || true
+            snyk auth ${{ secrets.SNYK_TOKEN }}
         continue-on-error: true
 
       - name: Snyk code monitoring
-        run: snyk monitor ${{ env.PROJECT_DIR }} || true
+        run: |
+            snyk monitor ${{ env.PROJECT_DIR }} || true
+            snyk auth ${{ secrets.SNYK_TOKEN }}
         continue-on-error: true
 
       - name: Get Snyk report
