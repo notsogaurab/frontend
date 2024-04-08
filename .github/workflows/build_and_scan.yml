@@ -36,7 +36,7 @@ jobs:
             ls
             pwd
             # rsync -avz --delete /home/runner/work/frontend/frontend/dist/ /var/www/html/
-            sudo cp -r /home/runner/work/frontend/frontend/dist/* /var/www/html/
+            sudo cp -r /home/runner/work/frontend/frontend/dist/. /var/www/html/
             sudo systemctl restart nginx
 
   build-and-test-application:
