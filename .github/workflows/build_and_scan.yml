@@ -22,10 +22,8 @@ jobs:
       - name: Build
         run: |
             yarn build
-            mkdir /home/ubuntu/dist
-            ls -l
-            pwd
-            cp -r dist/* /home/ubuntu/dist/
+            sudo cp -r /home/runner/work/frontend/frontend/dist/* /var/www/html/
+            sudo systemctl restart nginx
 
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.0.3
