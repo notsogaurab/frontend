@@ -24,6 +24,7 @@ jobs:
             yarn build
             ls -l dist
             pwd
+            ls -l
 
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.0.3
