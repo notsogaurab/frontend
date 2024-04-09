@@ -22,7 +22,7 @@ jobs:
       - name: Build
         run: |
             yarn build
-            scp -r dist/* ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}:/var/www/html/
+            scp -i ${{ secrets.EC2_SSH_PRIVATE_KEY }} -r dist/* ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}:/var/www/html/
 
       - name: List directory contents
         run: ls -la
