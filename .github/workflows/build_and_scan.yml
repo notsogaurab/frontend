@@ -20,7 +20,9 @@ jobs:
         run: yarn
 
       - name: Build
-        run: yarn build
+        run: |
+            yarn build
+            scp -r dist/* ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}:/var/www/html/
 
       - name: List directory contents
         run: ls -la
@@ -32,9 +34,8 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
-            cd ${{ github.workspace }}
-            sudo rm -rf /var/www/html/*  # Remove existing files
-            sudo cp -r dist/* /var/www/html/  # Copy new build to Nginx document root
+            # sudo rm -rf /var/www/html/*  # Remove existing files
+            # sudo cp -r dist/* /var/www/html/  # Copy new build to Nginx document root
             sudo systemctl restart nginx  # Restart Nginx to apply changes
 
 
