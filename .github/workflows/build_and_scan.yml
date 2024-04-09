@@ -1,4 +1,4 @@
-name: Build and Deploy
+name: Build and Scan Application with Snyk and StackHawk
 
 on:
   push:
@@ -7,24 +7,6 @@ on:
   workflow_dispatch:
 
 jobs:
-#   build:
-#     runs-on: ubuntu-latest
-    # env:
-    #   PROJECT_DIR: '/home/runner/work/frontend/frontend'
-
-    # steps:
-    #   - name: Checkout code
-    #     uses: actions/checkout@v2
-
-    #   - name: Install dependencies
-    #     run: yarn
-
-    #   - name: Build
-    #     run: |
-    #       yarn build
-    #       yarn dev &
-
-
   build-and-test-application:
     runs-on: ubuntu-latest
 
@@ -32,10 +14,10 @@ jobs:
       PROJECT_DIR: "/home/runner/work/frontend/frontend"
 
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install dependencies
+      - name: Install dependencies, build and run application
         run: |
           yarn install
           yarn build
@@ -51,7 +33,7 @@ jobs:
           snyk auth ${{ secrets.SNYK_TOKEN }}
         continue-on-error: true
 
-      - name: Snyk code monitoring
+      - name: Snyk code monitoringfor
         run: |
           snyk monitor ${{ env.PROJECT_DIR }} || true
           snyk auth ${{ secrets.SNYK_TOKEN }}
@@ -66,7 +48,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
-      - name: Run scan
+      - name: StackHawk Scan for Dynamic Application Security Testing
         env:
             HAWK_ENV: Github Actions - ${{ github.repository }}
         continue-on-error: true
