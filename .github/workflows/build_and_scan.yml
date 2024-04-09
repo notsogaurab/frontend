@@ -12,25 +12,18 @@ jobs:
     # env:
     #   PROJECT_DIR: '/home/runner/work/frontend/frontend'
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    # steps:
+    #   - name: Checkout code
+    #     uses: actions/checkout@v2
 
-      - name: Install dependencies
-        run: yarn
+    #   - name: Install dependencies
+    #     run: yarn
 
-      - name: Build
-        run: |
-          yarn build
-          yarn dev &
+    #   - name: Build
+    #     run: |
+    #       yarn build
+    #       yarn dev &
 
-      - name: Run scan
-        env:
-          HAWK_ENV: Github
-        continue-on-error: true
-        uses: stackhawk/hawkscan-action@v2
-        with:
-          apiKey: ${{ secrets.STACK_HAWK_API_KEY }}
 
   build-and-test-application:
     runs-on: ubuntu-latest
@@ -46,6 +39,7 @@ jobs:
         run: |
           yarn install
           yarn build
+          yarn dev &
         working-directory: ${{ env.PROJECT_DIR }}
 
       - name: Install Snyk CLI
@@ -71,3 +65,11 @@ jobs:
         if: always()
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      - name: Run scan
+        env:
+            HAWK_ENV: Github Actions - ${{ github.repository }}
+        continue-on-error: true
+        uses: stackhawk/hawkscan-action@v2
+        with:
+          apiKey: ${{ secrets.STACK_HAWK_API_KEY }}
