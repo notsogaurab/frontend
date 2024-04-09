@@ -21,29 +21,22 @@ jobs:
 
       - name: Build
         run: |
-            yarn build
-            scp -i ${{ secrets.EC2_SSH_PRIVATE_KEY }} -r dist/* ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}:/var/www/html/
+          yarn build
+          yarn dev &
 
-      - name: List directory contents
-        run: ls -la
-
-      - name: Deploy to EC2
-        uses: appleboy/ssh-action@v1.0.3
+      - name: Run scan
+        env:
+          HAWK_ENV: Github
+        continue-on-error: true
+        uses: stackhawk/hawkscan-action@v2
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-          script: |
-            # sudo rm -rf /var/www/html/*  # Remove existing files
-            # sudo cp -r dist/* /var/www/html/  # Copy new build to Nginx document root
-            sudo systemctl restart nginx  # Restart Nginx to apply changes
-
+          apiKey: ${{ secrets.STACK_HAWK_API_KEY }}
 
   build-and-test-application:
     runs-on: ubuntu-latest
 
     env:
-        PROJECT_DIR: '/home/runner/work/frontend/frontend'
+      PROJECT_DIR: "/home/runner/work/frontend/frontend"
 
     steps:
       - name: Checkout
@@ -60,14 +53,14 @@ jobs:
 
       - name: Snyk code test
         run: |
-            snyk test ${{ env.PROJECT_DIR }} || true
-            snyk auth ${{ secrets.SNYK_TOKEN }}
+          snyk test ${{ env.PROJECT_DIR }} || true
+          snyk auth ${{ secrets.SNYK_TOKEN }}
         continue-on-error: true
 
       - name: Snyk code monitoring
         run: |
-            snyk monitor ${{ env.PROJECT_DIR }} || true
-            snyk auth ${{ secrets.SNYK_TOKEN }}
+          snyk monitor ${{ env.PROJECT_DIR }} || true
+          snyk auth ${{ secrets.SNYK_TOKEN }}
         continue-on-error: true
 
       - name: Get Snyk report
