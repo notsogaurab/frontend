@@ -18,7 +18,7 @@ WORKDIR /usr/src/app
 # Build the application
 RUN yarn build
 # for production
-FROM nginx:mainline-alpine-slim as main
+FROM nginx:1.27.0-alpine3.19-slim as main
 # Copy the built files from the builder stage
 COPY --from=builder /usr/src/app/dist /usr/share/nginx/html
 # Expose the port
